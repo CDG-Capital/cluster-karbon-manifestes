@@ -52,10 +52,10 @@ spec:
 #      hints.default_config.enabled: "false"
       hints:
         enabled: true
-          default_config:
-            type: container
-            paths:
-              - /var/log/containers/*${data.kubernetes.container.id}.log
+        default_config:
+          type: container
+          paths:
+            - /var/log/containers/*${data.kubernetes.container.id}.log
 #      templates:
 #      - condition.equals.kubernetes.namespace: envir-dev
 #        config:
