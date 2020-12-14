@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+  name: kibana
+  namespace: monitoring
+spec:
+  rules:
+  - host: kibana.portail-dev.cdg.com
+    http:
+      paths:
+      - backend:
+          serviceName: kibana-kb-http
+          servicePort: 5601
+        path: /

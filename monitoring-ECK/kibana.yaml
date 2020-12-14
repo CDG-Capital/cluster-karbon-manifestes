@@ -1,0 +1,32 @@
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: kibana
+  namespace: monitoring
+spec:
+  version: 7.10.1
+  count: 1
+#  elasticsearch:
+#    url: https://eck-elasticsearch-es-http:9200
+#    auth:
+      # reference to a secret containing credentials in the given key
+#      secret:
+#        name: eck-elasticsearch-es-elastic-user
+#        key:  elastic # key is the user, value is the password for that user
+  elasticsearchRef:
+    name: elasticsearch
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
+  podTemplate:
+    spec:
+      containers:
+      - name: kibana
+        resources:
+          requests:
+            memory: 1Gi
+            cpu: 0.5
+          limits:
+            memory: 2Gi
+            cpu: 1
