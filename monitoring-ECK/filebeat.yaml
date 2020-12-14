@@ -72,14 +72,6 @@ spec:
     processors:
     - add_cloud_metadata: {}
     - add_host_metadata: {}
-    - drop_event.when:
-      or:
-        - equals:
-            kubernetes.namespace: "kube-system"
-        - equals:
-            kubernetes.namespace: "calico-system"
-        - equals:
-            kubernetes.namespace: "ntnx-system"
   daemonSet:
     podTemplate:
       spec:
