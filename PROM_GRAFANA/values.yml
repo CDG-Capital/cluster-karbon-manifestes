@@ -35,3 +35,8 @@ datasources:
         type: prometheus
         url: http://prometheus-apps.monitoring.svc.cluster.local:9090
         access: proxy
+
+sidecar:
+  dashboards:
+    enabled: true
+    label: grafana_dashboard
