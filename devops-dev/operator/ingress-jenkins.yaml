@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: jenkins-ingress
+  namespace: integration
+spec:
+  rules:
+  - host: jenkins-dev.devops.cdg.com
+    http:
+      paths:
+      - backend:
+          serviceName: jenkins-operator-http-jenkins
+          servicePort: 8080
+        path: /
+
