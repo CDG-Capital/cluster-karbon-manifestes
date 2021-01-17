@@ -1,3 +1,9 @@
+# https://gitlab.com/gitlab-org/charts/gitlab/-/tree/master/
+# https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/doc/charts/minio/index.md
+# https://docs.gitlab.com/ee/administration/gitaly/praefect.html
+# https://docs.gitlab.com/ee/administration/repository_storage_paths.html
+
+
 # Getting value-gitlab.yaml
 
 helm inspect values gitlab/gitlab > values-gitlab.yaml
