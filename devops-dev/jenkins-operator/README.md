@@ -37,5 +37,10 @@ helm repo update
 
 helm install <name> jenkins/jenkins-operator -n <your-namespace>
 
+# Create Configmaps for backup
+
+kdevops -n integration create cm custom-backup-cm --from-file=backup.sh
+
+
 
 

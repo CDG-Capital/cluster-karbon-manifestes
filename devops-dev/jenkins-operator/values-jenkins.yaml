@@ -167,6 +167,10 @@ jenkins:
     - name: backup # PVC volume where backups will be stored
       persistentVolumeClaim:
         claimName: jenkins-backup
+    - name: custom-backup
+      configMap:
+        defaultMode: 0777
+        name: custom-backup-cm
 
   # volumeMounts are mounts for Jenkins pod
   volumeMounts: []
@@ -207,7 +211,7 @@ jenkins:
 
     # backupCommand is backup container command
     backupCommand:
-      - /home/user/bin/backup.sh
+      - /home/user/bin2/backup.sh
 
     # restoreCommand is backup restore command
     restoreCommand:
@@ -219,7 +223,7 @@ jenkins:
       enabled: true
 
       # size is size of PVC
-      size: 5Gi
+      size: 100Gi
 
       # className is storageClassName for PVC
       # See https://kubernetes.io/docs/concepts/storage/persistent-volumes/#class-1 for more details
@@ -236,7 +240,7 @@ jenkins:
       - name: JENKINS_HOME
         value: /jenkins-home
       - name: BACKUP_COUNT
-        value: "3" # keep only the 3 most recent backups
+        value: "2" # keep only the 3 most recent backups
 
     # volumeMounts holds the mount points for volumes
     volumeMounts:
@@ -244,6 +248,8 @@ jenkins:
         mountPath: /jenkins-home # Jenkins home volume
       - mountPath: /backup # backup volume
         name: backup
+      - mountPath: /home/user/bin2
+        name: custom-backup
 
   # configuration is section where we can configure Jenkins instance
   # See https://jenkinsci.github.io/kubernetes-operator/docs/getting-started/latest/customization/ for details
