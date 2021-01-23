@@ -42,5 +42,9 @@ helm install <name> jenkins/jenkins-operator -n <your-namespace>
 kdevops -n integration create cm custom-backup-cm --from-file=backup.sh
 
 
+# Credentials in jenkins are created by adding secrets and jenkins discover them automaticcaly
+
+# more examples here : https://jenkinsci.github.io/kubernetes-credentials-provider-plugin/examples/
+
 
 

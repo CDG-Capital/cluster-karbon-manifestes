@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jenkins-operator-user-configuration
+  namespace: integration
+data:
+  1-system-message.yaml: |
+    jenkins:
+      systemMessage: "Bienvenu sur CDG CAPITAL JENKINS"
+      globalNodeProperties:
+      - envVars:
+          env:
+          - key: NEXUS_URL
+            value: "https://nexus.devops.cdg.com"
+          - key: HARBOR_URL
+            value: "https://harbor.devops.cdg.com"
