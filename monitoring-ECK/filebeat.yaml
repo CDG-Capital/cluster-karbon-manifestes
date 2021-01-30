@@ -49,26 +49,13 @@ spec:
     filebeat.autodiscover.providers:
     - node: ${NODE_NAME}
       type: kubernetes
-#      hints.default_config.enabled: "false"
+      hints.default_config.enabled: "false"
       hints:
         enabled: true
         default_config:
           type: container
           paths:
             - /var/log/containers/*${data.kubernetes.container.id}.log
-#      templates:
-#      - condition.equals.kubernetes.namespace: envir-dev
-#        config:
-#        - paths: ["/var/log/containers/*${data.kubernetes.container.id}.log"]
-#          type: container
-#      - condition.equals.kubernetes.namespace: envir-test
-#        config:
-#        - paths: ["/var/log/containers/*${data.kubernetes.container.id}.log"]
-#          type: container
-#      - condition.equals.kubernetes.labels.log-label: "true"
-#        config:
-#        - paths: ["/var/log/containers/*${data.kubernetes.container.id}.log"]
-#          type: container
     processors:
     - add_cloud_metadata: {}
     - add_host_metadata: {}
