@@ -9,4 +9,4 @@ spec:
     matchLabels:
       monitoring: apps
   endpoints:
-    - port: http-metrics
+    - port: metrics
