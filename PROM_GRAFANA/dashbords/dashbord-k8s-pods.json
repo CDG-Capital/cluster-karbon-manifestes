@@ -16,8 +16,8 @@
   "editable": true,
   "gnetId": 10861,
   "graphTooltip": 1,
-  "id": 1,
-  "iteration": 1608649274323,
+  "id": 8,
+  "iteration": 1612806712215,
   "links": [],
   "panels": [
     {
@@ -25,7 +25,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus K8s (nutanix)",
+      "datasource": "Prometheus K8s",
       "editable": true,
       "error": false,
       "fieldConfig": {
@@ -70,7 +70,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.3",
+      "pluginVersion": "7.3.1",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -148,7 +148,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": null,
+      "datasource": "Prometheus K8s",
       "editable": true,
       "error": false,
       "fieldConfig": {
@@ -193,7 +193,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.3",
+      "pluginVersion": "7.3.1",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -270,7 +270,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": null,
+      "datasource": "Prometheus K8s",
       "editable": true,
       "error": false,
       "fieldConfig": {
@@ -315,7 +315,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.3",
+      "pluginVersion": "7.3.1",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -380,10 +380,10 @@
         "allValue": "",
         "current": {
           "selected": false,
-          "text": "envir-dev",
-          "value": "envir-dev"
+          "text": "portail-sandbox",
+          "value": "portail-sandbox"
         },
-        "datasource": "Prometheus K8s (nutanix)",
+        "datasource": "Prometheus K8s",
         "definition": "",
         "error": null,
         "hide": 0,
@@ -407,10 +407,10 @@
         "allValue": "",
         "current": {
           "selected": false,
-          "text": "postgres-ha-postgresql-ha-pgpool-687756d98f-l9vtg",
-          "value": "postgres-ha-postgresql-ha-pgpool-687756d98f-l9vtg"
+          "text": "my-shell",
+          "value": "my-shell"
         },
-        "datasource": "Prometheus K8s (nutanix)",
+        "datasource": "Prometheus K8s",
         "definition": "",
         "error": null,
         "hide": 0,
@@ -437,7 +437,7 @@
           "text": "All",
           "value": "$__all"
         },
-        "datasource": "Prometheus K8s (nutanix)",
+        "datasource": "Prometheus K8s",
         "definition": "",
         "error": null,
         "hide": 0,
