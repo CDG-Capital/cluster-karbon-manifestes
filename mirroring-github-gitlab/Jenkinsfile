@@ -1,0 +1,13 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('mirroring') {
+            steps {
+                sh'''
+                     mirroring-github-gitlab/mirroring.sh 
+                '''
+            }
+        }
+    }
+}
