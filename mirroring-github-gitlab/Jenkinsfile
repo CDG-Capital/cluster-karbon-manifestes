@@ -5,7 +5,7 @@ pipeline {
         stage('mirroring') {
             steps {
                 sh'''
-                     mirroring-github-gitlab/mirroring.sh 
+                     mirroring-github-gitlab/mirroring.sh git@github.com:CDG-Capital/backend-portail.git  git@gitlab.devops.cdg.com:bank-online/backend-portail.git
                 '''
             }
         }
