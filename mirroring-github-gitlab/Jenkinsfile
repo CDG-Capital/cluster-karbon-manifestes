@@ -7,7 +7,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'gitlab-devops', passwordVariable: 'password', usernameVariable: 'username')])
                { 
                 sh'''
-                     mirroring-github-gitlab/mirroring.sh git@github.com:CDG-Capital/backend-portail.git  https://$username:$password@gitlab.devops.cdg.com/bank-online/backend-portail.git
+                     mirroring-github-gitlab/mirroring.sh git@github.com:CDG-Capital/frontend-public.git  https://$username:$password@gitlab.devops.cdg.com/bank-online/public-frontend-portail.git
                 '''
                }
             }
