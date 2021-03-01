@@ -15,9 +15,8 @@ echo "Cloning from ${SOURCE_URL} into ${WORKDIR}..."
 
 git init --bare "${WORKDIR}"
 cd "${WORKDIR}"
-
+git config http.postBuffer 99524288000
 git config remote.origin.url "${SOURCE_URL}"
-git config http.postBuffer 1524288000
 git config --add remote.origin.fetch '+refs/heads/*:refs/heads/*'
 git config --add remote.origin.fetch '+refs/tags/*:refs/tags/*'
 git config --add remote.origin.fetch '+refs/notes/*:refs/notes/*'
