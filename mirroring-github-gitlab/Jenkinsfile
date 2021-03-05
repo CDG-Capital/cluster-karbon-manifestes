@@ -4,10 +4,14 @@ pipeline {
     stages {
         stage('mirroring') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'gitlab-devops', passwordVariable: 'password', usernameVariable: 'username')])
+                withCredentials([
+                    usernamePassword(credentialsId: 'gitlab-devops', passwordVariable: 'password', usernameVariable: 'username'),
+                    usernamePassword(credentialsId: 'github-fininfo-creds', passwordVariable: 'gitpass', usernameVariable: 'gituser')
+                    
+                    ])
                { 
                 sh'''
-                     mirroring-github-gitlab/mirroring.sh git@github.com:$source  https://$username:$password@gitlab.devops.cdg.com/$destination
+                     mirroring-github-gitlab/mirroring.sh https://$gituser:$gitpass@github.com/$source  https://$username:$password@gitlab.devops.cdg.com/$destination
                 '''
                }
             }
