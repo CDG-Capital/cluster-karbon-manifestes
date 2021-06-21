@@ -23,10 +23,13 @@ jenkins:
   # labels are injected into metadata labels field
   labels: {}
 
+  # annotations are injected into metadata annotations field
+  annotations: {}
+
   # image is the name (and tag) of the Jenkins instance
   # Default: jenkins/jenkins:lts
   # It's recommended to use LTS (tag: "lts") version
-  image: jenkins/jenkins:lts
+  image: jenkins/jenkins:2.277.4-lts-alpine
 
   # env contains jenkins container environment variables
   env: []
@@ -60,34 +63,20 @@ jenkins:
   #
   # basePlugins:
   # - name: kubernetes
-  #   version: 1.18.3
+  #   version: 1.29.6
   # - name: workflow-job
-  #   version: "2.34"
+  #   version: "2.41"
   # - name: workflow-aggregator
   #   version: "2.6"
   # - name: git
-  #   version: 3.12.0
+  #   version: 4.7.2
   # - name: job-dsl
-  #   version: "1.76"
+  #   version: "1.77"
   # - name: configuration-as-code
-  #   version: "1.29"
+  #   version: "1.51"
   # - name: kubernetes-credentials-provider
-  #   version: 0.12.1
-  basePlugins:
-    - name: kubernetes
-      version: "1.25.2"
-    - name: workflow-job
-      version: "2.39"
-    - name: workflow-aggregator
-      version: "2.6"
-    - name: git
-      version: "4.2.2"
-    - name: job-dsl
-      version: "1.77"
-    - name: configuration-as-code
-      version: "1.38"
-    - name: kubernetes-credentials-provider
-      version: "0.13"
+  #   version: 0.18-1
+  basePlugins: []
 
   # plugins are plugins required by the user
   # You can define plugins here
@@ -97,59 +86,21 @@ jenkins:
   #
   # plugins:
   # - name: simple-theme-plugin
-  #   version: 0.5.1
-  plugins:
-    - name: maven-plugin
-      version: "3.8"
-    - name: ansible
-      version: "1.1"
-    - name: bitbucket
-      version: "1.1.27"
-    - name: bitbucket-build-status-notifier
-      version: "1.4.2"
-    - name: docker-plugin
-      version: "1.2.1"
-    - name: generic-webhook-trigger
-      version: "1.72"
-    - name: github-pullrequest
-      version: "0.2.8"
-    - name: job-import-plugin
-      version: "3.4"
-    - name: msbuild
-      version: "1.29"
-    - name: nexus-artifact-uploader
-      version: "2.13"
-    - name: pipeline-npm
-      version: "0.9.2"
-    - name: pipeline-utility-steps
-      version: "2.6.1"
-    - name: pollscm
-      version: "1.3.1"
-    - name: postbuild-task
-      version: "1.9"
-    - name: ranorex-integration
-      version: "1.0.2"
-    - name: sidebar-link
-      version: "1.11.0"
-    - name: sonarqube-generic-coverage
-      version: "1.0"
-    - name: sonar
-      version: "2.13"
-    - name: simple-theme-plugin
-      version: "0.6"
+  #   version: "0.6"
+  plugins: []
 
   # seedJobs is placeholder for jenkins seed jobs
   # For seed job creation tutorial, check https://jenkinsci.github.io/kubernetes-operator/docs/getting-started/latest/configuration/#prepare-job-definitions-and-pipelines
   # See https://jenkinsci.github.io/kubernetes-operator/docs/getting-started/latest/configuration/#configure-seed-jobs for additional info
   # Example:
   #
-  seedJobs:
-    - id: jenkins-operator
-      targets: "cicd/jobs/*.jenkins"
-      description: "Jenkins Operator repository"
-      repositoryBranch: master
-      repositoryUrl: https://github.com/jenkinsci/kubernetes-operator.git
-  #seedJobs: []
+  # seedJobs:
+  #  - id: jenkins-operator
+  #    targets: "cicd/jobs/*.jenkins"
+  #    description: "Jenkins Operator repository"
+  #    repositoryBranch: master
+  #    repositoryUrl: https://github.com/jenkinsci/kubernetes-operator.git
+  seedJobs: []
 
   # Resource limit/request for Jenkins
   # See https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/ for details
@@ -167,13 +118,12 @@ jenkins:
     - name: backup # PVC volume where backups will be stored
       persistentVolumeClaim:
         claimName: jenkins-backup
-    - name: custom-backup
-      configMap:
-        defaultMode: 0777
-        name: custom-backup-cm
 
   # volumeMounts are mounts for Jenkins pod
   volumeMounts: []
+
+  # defines authorization strategy of the operator for the Jenkins API
+  authorizationStrategy: createUser
 
   # securityContext for pod
   securityContext:
@@ -186,6 +136,29 @@ jenkins:
   # slave Jenkins service
   # See https://jenkinsci.github.io/kubernetes-operator/docs/getting-started/latest/schema/#github.com/jenkinsci/kubernetes-operator/pkg/apis/jenkins/v1alpha2.Service for details
   #slaveService:
+  
+  # LivenessProbe for Jenkins Master pod
+  livenessProbe:
+    failureThreshold: 12
+    httpGet:
+      path: /login
+      port: http
+      scheme: HTTP
+    initialDelaySeconds: 80
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+  # ReadinessProbe for Jenkins Master pod
+  readinessProbe:
+    failureThreshold: 3
+    httpGet:
+      path: /login
+      port: http
+      scheme: HTTP
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
 
   # backup is section for configuring operator's backup feature
   # By default backup feature is enabled and pre-configured
@@ -198,7 +171,7 @@ jenkins:
 
     # image used by backup feature
     # By default using prebuilt backup PVC image by VirtusLab
-    image: virtuslab/jenkins-operator-backup-pvc:v0.0.8
+    image: virtuslab/jenkins-operator-backup-pvc:v0.1.0
 
     # containerName is backup container name
     containerName: backup
@@ -217,6 +190,9 @@ jenkins:
     restoreCommand:
       - /home/user/bin/restore.sh
 
+    getLatestAction:
+      - /home/user/bin/get-latest.sh
+
     # pvc is Persistent Volume Claim Kubernetes resource
     pvc:
       # enabled is enable/disable switch for PVC
@@ -227,7 +203,16 @@ jenkins:
 
       # className is storageClassName for PVC
       # See https://kubernetes.io/docs/concepts/storage/persistent-volumes/#class-1 for more details
-      className: "default-storageclass"
+      className: ""
+
+    # resources used by backup container
+    resources:
+      limits:
+        cpu: 1500m
+        memory: 1Gi
+      requests:
+        cpu: 100m
+        memory: 256Mi
 
     # env contains container environment variables
     # PVC backup provider handles these variables:
@@ -240,7 +225,7 @@ jenkins:
       - name: JENKINS_HOME
         value: /jenkins-home
       - name: BACKUP_COUNT
-        value: "2" # keep only the 3 most recent backups
+        value: "3" # keep only the 3 most recent backups
 
     # volumeMounts holds the mount points for volumes
     volumeMounts:
@@ -248,8 +233,6 @@ jenkins:
         mountPath: /jenkins-home # Jenkins home volume
       - mountPath: /backup # backup volume
         name: backup
-      - mountPath: /home/user/bin2
-        name: custom-backup
 
   # configuration is section where we can configure Jenkins instance
   # See https://jenkinsci.github.io/kubernetes-operator/docs/getting-started/latest/customization/ for details
@@ -287,9 +270,7 @@ operator:
   fullnameOverride: ""
 
   resources: {}
-  nodeSelector: {} 
-    # app: infra
+  nodeSelector: {}
   tolerations: []
   affinity: {}
-
 

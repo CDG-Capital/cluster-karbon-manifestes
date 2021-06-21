@@ -10,14 +10,8 @@ metadata:
   namespace: integration
 spec:
   configurationAsCode:
-    configurations: 
-      - name: jenkins-operator-user-configuration
-    secret:
-      name: ""
-  groovyScripts:
     configurations: []
-    secret:
-      name: ""
+ #   - name: jenkins-operator-user-configuration
   backup:
     action:
       exec:
@@ -35,21 +29,6 @@ spec:
   jenkinsAPISettings:
     authorizationStrategy: createUser
   master:
- #   basePlugins:
- #   - name: kubernetes
- #     version: 1.25.2
- #   - name: workflow-job
- #     version: "2.39"
- #   - name: workflow-aggregator
- #     version: "2.6"
- #   - name: git
- #     version: 4.2.2
- #    - name: job-dsl
- #     version: "1.77"
- #   - name: configuration-as-code
- #     version: "1.38"
-#    - name: kubernetes-credentials-provider
-#      version: "0.13"
     containers:
     - command:
       - bash
@@ -60,7 +39,7 @@ spec:
         value: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1
           -Djenkins.install.runSetupWizard=false -Djava.awt.headless=true
       image: jenkins/jenkins:2.289.1-lts-alpine
-      imagePullPolicy: IfNotPresent
+      imagePullPolicy: Always
       livenessProbe:
         failureThreshold: 30
         httpGet:
@@ -112,71 +91,6 @@ spec:
       - mountPath: /backup
         name: backup
     disableCSRFProtection: false
-    plugins:
-    - name: basic-branch-build-strategies
-      version: "1.3.2"
-    - name: ansible
-      version: "1.1"
-    - name: build-timeout
-      version: "1.20"
-    - name: docker-slaves
-      version: "1.0.7"
-    - name: docker-plugin
-      version: "1.2.2"
-#    - name: email-ext
-#      version: "2.83"
-    - name: external-monitor-job
-      version: "1.7"
-    - name: generic-webhook-trigger
-      version: "1.74"
-    - name: msbuild
-      version: "1.30"
-    - name: git
-      version: "4.7.2"
-    - name: git-parameter
-      version: "0.9.13"
-    - name: pipeline-utility-steps
-      version: 2.8.0
-    - name: github-pullrequest
-      version: "0.3.0"
-    - name: gitlab-plugin
-      version: "1.5.20"
-    - name: hashicorp-vault-pipeline
-      version: "1.3"
-    - name: jira
-      version: "3.3"
-    - name: ranorex-integration
-      version: "1.0.2"
-    - name: keycloak
-      version: "2.3.0"
-    - name: matrix-auth
-      version: "2.6.7"
-    - name: maven-plugin
-      version: "3.12"
-    - name: nexus-artifact-uploader
-      version: "2.13"
-    - name: nexus-jenkins-plugin
-      version: "3.11.20210420-142258.bdfc332"
-    - name: workflow-aggregator
-      version: "2.6"
-    - name: pipeline-maven
-      version: "3.10.0"
-    - name: pipeline-github-lib
-      version: "1.0"
-    - name: sidebar-link
-      version: "1.12.0"
-    - name: sonar
-      version: "2.13.1"
-    - name: timestamper
-      version: "1.13"
-    - name: toolenv
-      version: "1.2"
-    - name: windows-slaves
-      version: "1.8"
-    - name: ws-cleanup
-      version: "0.39"
-    - name: npm-yarn-wrapper-steps
-      version: "0.1.0"
     securityContext:
       fsGroup: 1000
       runAsUser: 1000
@@ -184,14 +98,6 @@ spec:
     - name: backup
       persistentVolumeClaim:
         claimName: jenkins-backup
-  seedJobs:
-  - description: Jenkins Operator repository
-    id: jenkins-operator
-    credentialType: usernamePassword
-    credentialID: gitlab-user-jenkins
-    repositoryBranch: master
-    repositoryUrl: http://gitlab-webservice-default.git-system:8181/devops/jenkins-jobs-as-code.git
-    targets: cicd/jobs/*.jenkins
   service:
     port: 8080
     type: ClusterIP

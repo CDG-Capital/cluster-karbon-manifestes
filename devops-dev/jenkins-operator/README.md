@@ -1,4 +1,4 @@
-i# Site : https://jenkinsci.github.io/kubernetes-operator/docs/installation/
+# Site : https://jenkinsci.github.io/kubernetes-operator/docs/installation/
 
 # Configure Custom Resource Definition
 
