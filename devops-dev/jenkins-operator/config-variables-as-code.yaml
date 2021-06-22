@@ -5,12 +5,260 @@ metadata:
   namespace: integration
 data:
   1-system-message.yaml: |
-    jenkins:
-      systemMessage: "Bienvenu sur CDG CAPITAL JENKINS"
-      globalNodeProperties:
-      - envVars:
-          env:
-          - key: NEXUS_URL
-            value: "https://nexus.devops.cdg.com"
-          - key: HARBOR_URL
-            value: "https://harbor.devops.cdg.com"
+        jenkins:
+          systemMessage: "Bienvenu sur CDG CAPITAL JENKINS"
+          globalNodeProperties:
+          - envVars:
+              env:
+              - key: NEXUS_URL
+                value: "https://nexus.devops.cdg.com"
+              - key: HARBOR_URL
+                value: "https://harbor.devops.cdg.com"
+          agentProtocols:
+          - "JNLP4-connect"
+          - "Ping"
+          authorizationStrategy:
+            loggedInUsersCanDoAnything:
+              allowAnonymousRead: false
+          clouds:
+          - kubernetes:
+              jenkinsTunnel: "jenkins-operator-slave-jenkins.integration.svc.cluster.local:50000"
+              jenkinsUrl: "http://jenkins-operator-http-jenkins.integration.svc.cluster.local:8080"
+              name: "kubernetes"
+              namespace: "integration"
+              retentionTimeout: 15
+              serverUrl: "https://kubernetes.default.svc.cluster.local:443"
+          crumbIssuer:
+            standard:
+              excludeClientIPFromCrumb: false
+          disableRememberMe: false
+          globalNodeProperties:
+          - envVars:
+              env:
+              - key: "HARBOR_URL"
+                value: "https://harbor.devops.cdg.com"
+              - key: "NEXUS_URL"
+                value: "https://nexus.devops.cdg.com"
+          labelAtoms:
+          - name: "master"
+          - name: "seed-job-agent"
+          labelString: "master"
+          markupFormatter: "plainText"
+          mode: EXCLUSIVE
+          myViewsTabBar: "standard"
+          noUsageStatistics: true
+          nodes:
+          - permanent:
+              labelString: "seed-job-agent"
+              launcher:
+                jnlp:
+                  workDirSettings:
+                    disabled: false
+                    failIfWorkDirIsMissing: false
+                    internalDir: "remoting"
+              name: "seed-job-agent"
+              nodeDescription: "The jenkins-operator generated agent"
+              numExecutors: 5
+              remoteFS: "/home/jenkins"
+          numExecutors: 5
+          primaryView:
+            all:
+              name: "all"
+          projectNamingStrategy: "standard"
+          quietPeriod: 5
+          remotingSecurity:
+            enabled: true
+          scmCheckoutRetryCount: 0
+          securityRealm:
+            local:
+              allowsSignup: false
+              enableCaptcha: false
+              users:
+              - id: "jenkins-operator"
+                name: "jenkins-operator"
+                properties:
+                - "apiToken"
+                - "mailer"
+                - "myView"
+                - preferredProvider:
+                    providerId: "default"
+                - "timezone"
+          slaveAgentPort: 50000
+          systemMessage: "Bienvenu sur CDG CAPITAL JENKINS"
+          updateCenter:
+            sites:
+            - id: "default"
+              url: "https://updates.jenkins.io/update-center.json"
+          views:
+          - all:
+              name: "all"
+          - list:
+              columns:
+              - "status"
+              - "weather"
+              - "jobName"
+              - "lastSuccess"
+              - "lastFailure"
+              - "lastDuration"
+              - "buildButton"
+              includeRegex: "((?!seed)(?!jenkins).)*"
+              name: "non-seed-jobs"
+          - list:
+              columns:
+              - "status"
+              - "weather"
+              - "jobName"
+              - "lastSuccess"
+              - "lastFailure"
+              - "lastDuration"
+              - "buildButton"
+              includeRegex: ".*job-dsl-seed.*"
+              name: "seed-jobs"
+          viewsTabBar: "standard"
+        security:
+          apiToken:
+            creationOfLegacyTokenEnabled: false
+            tokenGenerationOnCreationEnabled: false
+            usageStatisticsEnabled: true
+          globalJobDslSecurityConfiguration:
+            useScriptSecurity: false
+          sSHD:
+            port: -1
+        unclassified:
+          buildDiscarders:
+            configuredBuildDiscarders:
+            - "jobBuildDiscarder"
+          buildStepOperation:
+            enabled: false
+          fingerprints:
+            fingerprintCleanupDisabled: false
+            storage: "file"
+          gitHubPluginConfig:
+            hookUrl: "https://jenkins-dev.devops.cdg.com/github-webhook/"
+          gitLabConnectionConfig:
+            connections:
+            - clientBuilderId: "autodetect"
+              connectionTimeout: 10
+              ignoreCertificateErrors: false
+              readTimeout: 10
+            useAuthenticatedEndpoint: true
+          gitSCM:
+            addGitTagAction: false
+            allowSecondFetch: false
+            createAccountBasedOnEmail: false
+            disableGitToolChooser: false
+            globalConfigEmail: "jenkins@cdgcapital.ma"
+            globalConfigName: "jenkins"
+            hideCredentials: false
+            showEntireCommitSummaryInChanges: false
+            useExistingAccountWithSameEmail: false
+          githubPullRequests:
+            actualiseOnFactory: false
+          globalConfigFiles:
+            configs:
+            - mavenSettings:
+                comment: "User settings"
+                content: "<settings>\n\t<servers>\n    <server>\n      <id>HERE_PLATFORM_REPO</id>\n\
+                  \    </server>\n  </servers>\n  <mirrors>\n    <mirror>\n      <!--This\
+                  \ sends everything else to /public -->\n      <id>nexus</id>\n      <mirrorOf>*</mirrorOf>\n\
+                  \      <url>http://172.23.23.198:6061/repository/maven-public/</url>\n \
+                  \   </mirror>\n  </mirrors>\n  <profiles>\n    <profile>\n      <id>nexus</id>\n\
+                  \      <!--Enable snapshots for the built in central repo to direct -->\n\
+                  \      <!--all requests to nexus via the mirror -->\n      <repositories>\n\
+                  \        <repository>\n          <id>central</id>\n          <url>http://central</url>\n\
+                  \          <releases><enabled>true</enabled></releases>\n          <snapshots><enabled>true</enabled></snapshots>\n\
+                  \        </repository>\n      </repositories>\n     <pluginRepositories>\n\
+                  \        <pluginRepository>\n          <id>central</id>\n          <url>http://central</url>\n\
+                  \          <releases><enabled>true</enabled></releases>\n          <snapshots><enabled>true</enabled></snapshots>\n\
+                  \        </pluginRepository>\n      </pluginRepositories>\n    </profile>\n\
+                  \  </profiles>\n  <activeProfiles>\n    <!--make the profile active all\
+                  \ the time -->\n    <activeProfile>nexus</activeProfile>\n  </activeProfiles>\n\
+                  </settings>"
+                id: "DevopsSettingsMaven"
+                isReplaceAll: true
+                name: "DevopsSettingsMaven"
+                providerId: "org.jenkinsci.plugins.configfiles.maven.MavenSettingsConfig"
+                serverCredentialMappings:
+                - credentialsId: "nexus-user-jenkins"
+                  serverId: "NexusCdgCapital"
+          globalLibraries:
+            libraries:
+            - defaultVersion: "master"
+              name: "jenkins-commons-library-local"
+              retriever:
+                modernSCM:
+                  scm:
+                    git:
+                      credentialsId: "jenkins-gitlab-user"
+                      id: "1d33520d-fcdc-415e-b4f9-53f72894b636"
+                      remote: "http://gitlab-webservice-default.git-system:8181/devops/jenkins-common-library.git"
+                      traits:
+                      - "gitBranchDiscovery"
+          globalNexusConfiguration:
+            instanceId: "62a0519689644d24808fc7ca86211b54"
+            nxrmConfigs:
+            - nxrm3Configuration:
+                credentialsId: "nexus-user-jenkins"
+                displayName: "NexusCdgCapital"
+                id: "NexusCdgCapital"
+                internalId: "46928039-6388-448c-ab40-c2c3908b9552"
+                serverUrl: "http://172.23.23.198:6061/"
+          hashicorpVault:
+            configuration:
+              engineVersion: 2
+              timeout: 60
+              vaultUrl: "https://vault.devops.cdg.com"
+          junitTestResultStorage:
+            storage: "file"
+          keycloakSecurityRealm:
+            keycloakJson: |-
+              {
+                "realm": "devops-realm",
+                "auth-server-url": "http://auth.portail-dev.cdg.com/auth/",
+                "ssl-required": "external",
+                "resource": "jenkins",
+                "public-client": true,
+                "confidential-port": 0
+              }
+            keycloakRespectAccessTokenTimeout: true
+            keycloakValidate: false
+          location:
+            adminAddress: "Adresse pas encore configurée <nobody@nowhere>"
+            url: "https://jenkins-dev.devops.cdg.com/"
+          mailer:
+            charset: "UTF-8"
+            useSsl: false
+            useTls: false
+          mavenModuleSet:
+            localRepository: "default"
+          pollSCM:
+            pollingThreadCount: 10
+          sonarGlobalConfiguration:
+            buildWrapperEnabled: false
+            installations:
+            - name: "SonarLocal"
+              serverUrl: "http://172.23.23.198:9000/"
+              triggers:
+                skipScmCause: false
+                skipUpstreamCause: false
+          timestamper:
+            allPipelines: false
+            elapsedTimeFormat: "'<b>'HH:mm:ss.S'</b> '"
+            systemTimeFormat: "'<b>'HH:mm:ss'</b> '"
+          whitelist:
+            enabled: false
+        tool:
+          git:
+            installations:
+            - home: "git"
+              name: "Default"
+          mavenGlobalConfig:
+            globalSettingsProvider: "standard"
+            settingsProvider: "standard"
+          pipelineMaven:
+            triggerDownstreamUponResultAborted: false
+            triggerDownstreamUponResultFailure: false
+            triggerDownstreamUponResultNotBuilt: false
+            triggerDownstreamUponResultSuccess: true
+            triggerDownstreamUponResultUnstable: false
+
