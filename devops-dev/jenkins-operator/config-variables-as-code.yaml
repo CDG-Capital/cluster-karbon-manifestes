@@ -6,14 +6,6 @@ metadata:
 data:
   1-system-message.yaml: |
         jenkins:
-          systemMessage: "Bienvenu sur CDG CAPITAL JENKINS"
-          globalNodeProperties:
-          - envVars:
-              env:
-              - key: NEXUS_URL
-                value: "https://nexus.devops.cdg.com"
-              - key: HARBOR_URL
-                value: "https://harbor.devops.cdg.com"
           agentProtocols:
           - "JNLP4-connect"
           - "Ping"
@@ -45,7 +37,6 @@ data:
           labelString: "master"
           markupFormatter: "plainText"
           mode: EXCLUSIVE
-          myViewsTabBar: "standard"
           noUsageStatistics: true
           nodes:
           - permanent:
@@ -60,61 +51,18 @@ data:
               nodeDescription: "The jenkins-operator generated agent"
               numExecutors: 5
               remoteFS: "/home/jenkins"
-          numExecutors: 5
-          primaryView:
-            all:
-              name: "all"
+          numExecutors: 0
           projectNamingStrategy: "standard"
           quietPeriod: 5
           remotingSecurity:
             enabled: true
           scmCheckoutRetryCount: 0
-          securityRealm:
-            local:
-              allowsSignup: false
-              enableCaptcha: false
-              users:
-              - id: "jenkins-operator"
-                name: "jenkins-operator"
-                properties:
-                - "apiToken"
-                - "mailer"
-                - "myView"
-                - preferredProvider:
-                    providerId: "default"
-                - "timezone"
           slaveAgentPort: 50000
           systemMessage: "Bienvenu sur CDG CAPITAL JENKINS"
           updateCenter:
             sites:
             - id: "default"
               url: "https://updates.jenkins.io/update-center.json"
-          views:
-          - all:
-              name: "all"
-          - list:
-              columns:
-              - "status"
-              - "weather"
-              - "jobName"
-              - "lastSuccess"
-              - "lastFailure"
-              - "lastDuration"
-              - "buildButton"
-              includeRegex: "((?!seed)(?!jenkins).)*"
-              name: "non-seed-jobs"
-          - list:
-              columns:
-              - "status"
-              - "weather"
-              - "jobName"
-              - "lastSuccess"
-              - "lastFailure"
-              - "lastDuration"
-              - "buildButton"
-              includeRegex: ".*job-dsl-seed.*"
-              name: "seed-jobs"
-          viewsTabBar: "standard"
         security:
           apiToken:
             creationOfLegacyTokenEnabled: false
@@ -158,22 +106,7 @@ data:
             configs:
             - mavenSettings:
                 comment: "User settings"
-                content: "<settings>\n\t<servers>\n    <server>\n      <id>HERE_PLATFORM_REPO</id>\n\
-                  \    </server>\n  </servers>\n  <mirrors>\n    <mirror>\n      <!--This\
-                  \ sends everything else to /public -->\n      <id>nexus</id>\n      <mirrorOf>*</mirrorOf>\n\
-                  \      <url>http://172.23.23.198:6061/repository/maven-public/</url>\n \
-                  \   </mirror>\n  </mirrors>\n  <profiles>\n    <profile>\n      <id>nexus</id>\n\
-                  \      <!--Enable snapshots for the built in central repo to direct -->\n\
-                  \      <!--all requests to nexus via the mirror -->\n      <repositories>\n\
-                  \        <repository>\n          <id>central</id>\n          <url>http://central</url>\n\
-                  \          <releases><enabled>true</enabled></releases>\n          <snapshots><enabled>true</enabled></snapshots>\n\
-                  \        </repository>\n      </repositories>\n     <pluginRepositories>\n\
-                  \        <pluginRepository>\n          <id>central</id>\n          <url>http://central</url>\n\
-                  \          <releases><enabled>true</enabled></releases>\n          <snapshots><enabled>true</enabled></snapshots>\n\
-                  \        </pluginRepository>\n      </pluginRepositories>\n    </profile>\n\
-                  \  </profiles>\n  <activeProfiles>\n    <!--make the profile active all\
-                  \ the time -->\n    <activeProfile>nexus</activeProfile>\n  </activeProfiles>\n\
-                  </settings>"
+                content: "<settings>\n\t<servers>\n    <server>\n      <id>HERE_PLATFORM_REPO</id>\n </server>\n  </servers>\n  <mirrors>\n    <mirror>\n      <!--This sends everything else to /public -->\n      <id>nexus</id>\n      <mirrorOf>*</mirrorOf>\n <url>http://172.23.23.198:6061/repository/maven-public/</url>\n </mirror>\n  </mirrors>\n  <profiles>\n    <profile>\n      <id>nexus</id>\n <!--Enable snapshots for the built in central repo to direct -->\n <!--all requests to nexus via the mirror -->\n      <repositories>\n <repository>\n          <id>central</id>\n          <url>http://central</url>\n <releases><enabled>true</enabled></releases>\n          <snapshots><enabled>true</enabled></snapshots>\n </repository>\n      </repositories>\n     <pluginRepositories>\n <pluginRepository>\n          <id>central</id>\n          <url>http://central</url>\n <releases><enabled>true</enabled></releases>\n          <snapshots><enabled>true</enabled></snapshots>\n </pluginRepository>\n      </pluginRepositories>\n    </profile>\n </profiles>\n  <activeProfiles>\n    <!--make the profile active all the time -->\n    <activeProfile>nexus</activeProfile>\n  </activeProfiles>\n </settings>"
                 id: "DevopsSettingsMaven"
                 isReplaceAll: true
                 name: "DevopsSettingsMaven"
