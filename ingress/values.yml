@@ -1,5 +1,5 @@
 ## nginx configuration
-## Ref: https://github.com/kubernetes/ingress-nginx/blob/master/controllers/nginx/configuration.md
+## Ref: https://github.com/kubernetes/ingress-nginx/blob/master/docs/user-guide/nginx-configuration/index.md
 ##
 
 ## Overrides for generated resource names
@@ -11,8 +11,8 @@ controller:
   name: controller
   image:
     repository: k8s.gcr.io/ingress-nginx/controller
-    tag: "v0.43.0"
-    digest: sha256:9bba603b99bf25f6d117cf1235b6598c16033ad027b143c90fa5b3cc583c5713
+    tag: "v0.44.0"
+    digest: sha256:3dd0fac48073beaca2d67a78c746c7593f9c575168a17139a9955a82c63c4b9a
     pullPolicy: IfNotPresent
     # www-data -> uid 101
     runAsUser: 101
@@ -24,14 +24,7 @@ controller:
     https: 443
 
   # Will add custom configuration options to Nginx https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/
-  config:
-    brotli-level: "6"
-    brotli-types: "text/xml image/svg+xml application/x-font-ttf image/vnd.microsoft.icon application/x-font-opentype application/json font/eot application/vnd.ms-fontobject application/javascript font/otf application/xml application/xhtml+xml text/javascript application/x-javascript text/plain application/x-font-truetype application/xml+rss image/x-icon font/opentype text/css image/x-win-bitmap"
-    enable-brotli: "true"
-    use-gzip: "true"
-    gzip-level: "1"
-    gzip-types: "application/atom+xml application/javascript application/x-javascript application/json application/rss+xml application/vnd.ms-fontobject application/x-font-ttf application/x-web-app-manifest+json application/xhtml+xml application/xml font/opentype image/svg+xml image/x-icon text/css text/javascript text/plain text/x-component"
-
+  config: {}
 
   ## Annotations to be added to the controller config configuration configmap
   ##
@@ -49,8 +42,7 @@ controller:
   # Optionally change this to ClusterFirstWithHostNet in case you have 'hostNetwork: true'.
   # By default, while using host network, name resolution uses the host's DNS. If you wish nginx-controller
   # to keep resolving names inside the k8s network, use ClusterFirstWithHostNet.
-  # dnsPolicy: ClusterFirst
-  dnsPolicy: ClusterFirstWithHostNet
+  dnsPolicy: ClusterFirst
 
   # Bare-metal considerations via the host network https://kubernetes.github.io/ingress-nginx/deploy/baremetal/#via-the-host-network
   # Ingress status was blank because there is no Service exposing the NGINX Ingress controller in a configuration using the host network, the default --publish-service flag used in standard cloud setups does not apply
@@ -136,8 +128,7 @@ controller:
   ## E.g. to specify the default SSL certificate you can use
   ## extraArgs:
   ##   default-ssl-certificate: "<namespace>/<secret_name>"
-  # extraArgs:
-    # default-ssl-certificate: "portail-prod/tls-certs"
+  extraArgs: {}
 
   ## Additional environment variables to set
   extraEnvs: []
@@ -151,9 +142,6 @@ controller:
   ## DaemonSet or Deployment
   ##
   kind: DaemonSet 
-  
-  daemonset:
-    useHostPort: true
 
   ## Annotations to be added to the controller Deployment or DaemonSet
   ##
@@ -278,8 +266,7 @@ controller:
 
   ## Annotations to be added to controller pods
   ##
-  podAnnotations: 
-    co.elastic.logs/enabled: "true"
+  podAnnotations: {}
 
   replicaCount: 1
 
@@ -366,7 +353,7 @@ controller:
     configMapKey: ""
 
   service:
-    enabled: true 
+    enabled: true
 
     annotations: {}
     labels: {}
@@ -405,7 +392,7 @@ controller:
       http: http
       https: https
 
-    type: ClusterIP 
+    type: LoadBalancer
 
     # type: NodePort
     # nodePorts:
@@ -504,8 +491,7 @@ controller:
       ## Provide a priority class name to the webhook patching job
       ##
       priorityClassName: ""
-      podAnnotations: 
-        co.elastic.logs/enabled: "true"
+      podAnnotations: {}
       nodeSelector: {}
       tolerations: []
       runAsUser: 2000
@@ -517,10 +503,12 @@ controller:
 
     service:
       labels:
-       monitoring: "apps"
+        monitoring: "apps"
       annotations: 
-       prometheus.io/scrape: "true"
-       prometheus.io/port: "10254"
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "10254"
+      # prometheus.io/scrape: "true"
+      # prometheus.io/port: "10254"
 
       # clusterIP: ""
 
@@ -531,7 +519,7 @@ controller:
 
       # loadBalancerIP: ""
       loadBalancerSourceRanges: []
-      servicePort: 9913
+      servicePort: 10254
       type: ClusterIP
       # externalTrafficPolicy: ""
       # nodePort: ""
@@ -630,6 +618,7 @@ defaultBackend:
   serviceAccount:
     create: true
     name: ""
+    automountServiceAccountToken: true
   ## Additional environment variables to set for defaultBackend pods
   extraEnvs: []
 
@@ -679,8 +668,7 @@ defaultBackend:
 
   ## Annotations to be added to default backend pods
   ##
-  podAnnotations: 
-    co.elastic.logs/enabled: "true"
+  podAnnotations: {}
 
   replicaCount: 1
 
@@ -693,6 +681,16 @@ defaultBackend:
   # requests:
   #   cpu: 10m
   #   memory: 20Mi
+
+  extraVolumeMounts: []
+  ## Additional volumeMounts to the default backend container.
+  #  - name: copy-portal-skins
+  #   mountPath: /var/lib/lemonldap-ng/portal/skins
+
+  extraVolumes: []
+  ## Additional volumes to the default backend pod.
+  #  - name: copy-portal-skins
+  #    emptyDir: {}
 
   autoscaling:
     enabled: false
@@ -731,6 +729,7 @@ podSecurityPolicy:
 serviceAccount:
   create: true
   name: ""
+  automountServiceAccountToken: true
 
 ## Optional array of imagePullSecrets containing private registry credentials
 ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
@@ -748,3 +747,9 @@ tcp: {}
 ##
 udp: {}
 #  53: "kube-system/kube-dns:53"
+
+# A base64ed Diffie-Hellman parameter
+# This can be generated with: openssl dhparam 4096 2> /dev/null | base64
+# Ref: https://github.com/krmichel/ingress-nginx/blob/master/docs/examples/customization/ssl-dh-param
+dhParam:
+
