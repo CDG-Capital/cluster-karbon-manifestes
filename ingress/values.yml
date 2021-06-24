@@ -24,7 +24,14 @@ controller:
     https: 443
 
   # Will add custom configuration options to Nginx https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/
-  config: {}
+  config: 
+    brotli-level: "6"
+    brotli-types: "text/xml image/svg+xml application/x-font-ttf image/vnd.microsoft.icon application/x-font-opentype application/json font/eot application/vnd.ms-fontobject application/javascript font/otf application/xml application/xhtml+xml text/javascript application/x-javascript text/plain application/x-font-truetype application/xml+rss image/x-icon font/opentype text/css image/x-win-bitmap"
+    enable-brotli: "true"
+    use-gzip: "true"
+    gzip-level: "1"
+    gzip-types: "application/atom+xml application/javascript application/x-javascript application/json application/rss+xml application/vnd.ms-fontobject application/x-font-ttf application/x-web-app-manifest+json application/xhtml+xml application/xml font/opentype image/svg+xml image/x-icon text/css text/javascript text/plain text/x-component"
+
 
   ## Annotations to be added to the controller config configuration configmap
   ##
@@ -42,7 +49,7 @@ controller:
   # Optionally change this to ClusterFirstWithHostNet in case you have 'hostNetwork: true'.
   # By default, while using host network, name resolution uses the host's DNS. If you wish nginx-controller
   # to keep resolving names inside the k8s network, use ClusterFirstWithHostNet.
-  dnsPolicy: ClusterFirst
+  dnsPolicy: ClusterFirstWithHostNet
 
   # Bare-metal considerations via the host network https://kubernetes.github.io/ingress-nginx/deploy/baremetal/#via-the-host-network
   # Ingress status was blank because there is no Service exposing the NGINX Ingress controller in a configuration using the host network, the default --publish-service flag used in standard cloud setups does not apply
@@ -142,7 +149,8 @@ controller:
   ## DaemonSet or Deployment
   ##
   kind: DaemonSet 
-
+  daemonset:
+    useHostPort: true
   ## Annotations to be added to the controller Deployment or DaemonSet
   ##
   annotations: {}
@@ -266,7 +274,8 @@ controller:
 
   ## Annotations to be added to controller pods
   ##
-  podAnnotations: {}
+  podAnnotations:
+    co.elastic.logs/enabled: "true"
 
   replicaCount: 1
 
@@ -392,7 +401,7 @@ controller:
       http: http
       https: https
 
-    type: LoadBalancer
+    type: ClusterIP
 
     # type: NodePort
     # nodePorts:
@@ -491,7 +500,8 @@ controller:
       ## Provide a priority class name to the webhook patching job
       ##
       priorityClassName: ""
-      podAnnotations: {}
+      podAnnotations:
+        co.elastic.logs/enabled: "true"
       nodeSelector: {}
       tolerations: []
       runAsUser: 2000
@@ -519,7 +529,7 @@ controller:
 
       # loadBalancerIP: ""
       loadBalancerSourceRanges: []
-      servicePort: 10254
+      servicePort: 9913
       type: ClusterIP
       # externalTrafficPolicy: ""
       # nodePort: ""
@@ -668,7 +678,8 @@ defaultBackend:
 
   ## Annotations to be added to default backend pods
   ##
-  podAnnotations: {}
+  podAnnotations:
+    co.elastic.logs/enabled: "true"
 
   replicaCount: 1
 
