@@ -5,8 +5,8 @@ external_groups:
 - 'gitlab.devops.cdg.com:external'
 args:
   assertion_consumer_service_url: 'https://gitlab.devops.cdg.com/users/auth/saml/callback'
-  idp_cert_fingerprint: '9B:4E:69:AC:CA:B7:23:22:B4:67:87:70:5C:37:75:9C:B7:D6:8A:B3'
-  idp_sso_target_url: 'http://auth.portail-dev.cdg.com/auth/realms/gitlab-realm/protocol/saml/clients/gitlab.devops.cdg.com'
+  idp_cert_fingerprint: 'DB:21:6C:C7:58:65:9A:21:25:FD:D2:65:DF:D3:EB:C2:6D:9F:C6:1F'
+  idp_sso_target_url: 'http://auth.portail-test.cdg.com/auth/realms/devops/protocol/saml/clients/gitlab.devops.cdg.com'
   issuer: 'gitlab.devops.cdg.com'
   attribute_statements:
     first_name: 
